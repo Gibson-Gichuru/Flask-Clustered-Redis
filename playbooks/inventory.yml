@@ -1,0 +1,8 @@
+all:
+  children:
+    database:
+      hosts:
+        18.233.224.7:
+    webapp:
+      hosts:
+        40.30.20.04:

@@ -1,0 +1,7 @@
+- name: Install REDIS WITH TLS ENABLED
+  hosts: database
+  become: yes
+
+  roles:
+    - install-redis
+    - configure-redis
