@@ -1,0 +1,12 @@
+---
+# vars file for install-redis
+
+port_: 0
+tls_port: 6379
+cluster_port: 5050
+rdb_file_name: data.rdb
+storage_dir: /data/redis
+tls_protocols: "TLSv1.3"
+init_sys: systemd
+cluster_enabled: "yes"
+node_state_file: 'node.conf'

@@ -1,0 +1,9 @@
+---
+# defaults file for install-redis
+tmp_dir: /tmp
+
+redis_sys_user: redisrunner
+redis_sys_group: redisrunner
+redis_log_dir: /etc/redis
+redis_log_file: redis.conf
+redis_download_url: "https://download.redis.io/redis-stable.tar.gz"

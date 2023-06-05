@@ -1,0 +1,49 @@
+# running mode
+
+daemonize no 
+
+supervised {{ init_sys }}
+
+pidfile /var/run/redis.pid
+
+# persistence setuo
+
+rdbchecksum yes
+
+dbfilename {{ rdb_file_name }}
+
+dir {{ storage_dir }}
+
+replica-serve-stale-data yes
+
+replica-read-only yes
+
+# tls enable 
+
+port {{ port_ }}
+tls-port {{ tls_port }}
+
+tls-cert-file {{ tls_cert_dir }}/{{ tls_server_cert }}
+tls-key-file {{ tls_key_dir }}/{{ tls_server_key }}
+tls-ca-cert-file {{ tls_ca_cert_dir }}/{{ tls_ca_cert }}
+
+tls-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+tls-auth-clients yes
+
+tls-replication yes
+
+tls-cluster yes
+
+tls-protocols {{ tls_protocols }}
+
+tls-prefer-server-ciphers no
+
+# enable cluster mode
+
+cluster-enabled {{ cluster_enabled }}
+
+cluster-config-file {{ node_state_file }}
+
+cluster-node-timeout 15000
+
+cluster-migration-barrier 1
