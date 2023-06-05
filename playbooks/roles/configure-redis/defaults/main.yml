@@ -1,0 +1,25 @@
+---
+tls_key_dir: /etc/ssl/private
+tls_ca_cert_dir: /usr/local/share/ca-certificates
+tls_ca_subj: "/O=RedisLabs/CN=Redis Production CA"
+tls_ca_exp_days: 3650
+tls_cert_exp_days: 365
+tls_cert_dir: /etc/ssl
+tls_ca_key: ca.key
+tls_ca_cert: ca.cert
+
+tmp_dir: /tmp
+owner: ubuntu
+group: ubuntu
+
+tls_server_subj: "/O=RedisLabs/CN=Production Server Certificate"
+tls_server_key: redis.key
+tls_server_cert: redis.cert
+
+tls_client_subj: "/O=RedisLabs/CN=Redis Client Certificate"
+tls_client_key: client.key
+tls_client_cert: client.cert
+redis_conf_dir: /etc/redis
+
+redis_sys_user: "redisrunner"
+redis_sys_group: "redisrunner"
