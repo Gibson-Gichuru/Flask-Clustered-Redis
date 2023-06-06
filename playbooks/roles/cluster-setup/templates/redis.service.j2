@@ -1,0 +1,11 @@
+[Unit]
+Description= Redis cluster node 
+After=network.target
+[Service]
+Type=notify
+ExecStart={{ redis_server }} {{ redis_conf }}
+TimeoutStopSec=0
+User=ubuntu
+Group=ubuntu
+[Install]
+WantedBy=multi-user.target

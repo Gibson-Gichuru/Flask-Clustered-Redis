@@ -1,0 +1,19 @@
+---
+# tasks file for cluster-setup
+
+- name: configure server keys
+  file:
+    path: /etc/ssl/private
+    owner: ubuntu
+    group: ubuntu
+    mode: "u+rwx,g+x" 
+
+- name: install redis service
+  tags: service
+  template:
+    src: redis.service.j2
+    dest: /etc/systemd/system/redis.service
+
+  notify: 
+    - Daemon reload
+    - Run Redis 

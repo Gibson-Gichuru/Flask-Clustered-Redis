@@ -1,0 +1,5 @@
+---
+# defaults file for cluster-setup
+
+redis_server: /usr/local/bin/redis-server
+redis_conf: /etc/redis/redis.conf
