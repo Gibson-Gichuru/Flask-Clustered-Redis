@@ -10,67 +10,61 @@
       - tcl-tls
       - redis-tools
       - libssl-dev
+      - libsystemd-dev
     state: present
     update_cache: yes
 
-- name: Configure system user group
-  tags: sys, setup
-  group:
-    name: "{{ redis_sys_group }}"
-    state: present
-
-- name: Configure system user
-  tags: sys, setup
-  user:
-    name: "{{ redis_sys_user }}"
-    group: "{{ redis_sys_group }}"
-    shell: /usr/sbin/nologin
-    createhome: no 
-    system: yes 
 
 - name: Logging DIR
   tags: setup
   file:
     path: "{{ redis_log_dir }}"
     state: directory
-    owner: "{{ redis_sys_user }}"
-    group: "{{ redis_sys_group }}"
+    owner: "ubuntu"
+    group: "ubuntu"
     mode: "0770"
+    force: yes
 
 - name: Logging file Permissions
   tags: permissions, setup
   file:
     path: "{{ redis_log_dir }}/{{ redis_log_file }}"
     state: touch
-    owner: "{{ redis_sys_user }}"
-    group: "{{ redis_sys_group }}"
+    owner: "ubuntu"
+    group: "ubuntu"
     mode: "0640"
 
 - name: Download Redis
   tags: download,setup
   ansible.builtin.unarchive:
     src: "{{ redis_download_url }}"
-    dest: "{{ tmp_dir }}"
+    dest: /tmp
     remote_src: yes
-    owner: "{{ redis_sys_user }}"
-    group: "{{ redis_sys_group }}"
-    mode: "0744"
+
 
 - name: Install redis
   tags: build, setup
-  environment:
-    BUILD_TLS: "yes"
   community.general.make:
-    chdir: "{{ tmp_dir }}/redis-stable"
+    chdir: /tmp/redis-stable
     target: install
+    params: 
+      BUILD_TLS: "yes"
+      USE_SYSTEMD: "yes"
+
+- name: Change /etc/redis ownership
+  file:
+    path: /etc/redis
+    owner: ubuntu
+    group: ubuntu
+    mode: "u+rwx,g+x"
+    recurse: yes
 
 - name: Configure redis
   tags: configure, setup
   template:
     src: redis.conf.j2
-    dest: "{{ redis_conf_dir }}/redis.conf"
-    owner: "{{ redis_sys_user }}"
-    group: "{{ redis_sys_group }}"
-    mode: "0640"
-    force: yes
+    dest: /etc/redis/redis.conf
+    
+
+
 

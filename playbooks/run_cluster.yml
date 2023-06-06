@@ -5,3 +5,4 @@
   roles:
     - install-redis
     - configure-redis
+    - cluster-setup

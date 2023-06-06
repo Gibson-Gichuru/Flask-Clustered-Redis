@@ -6,7 +6,7 @@ tls_ca_exp_days: 3650
 tls_cert_exp_days: 365
 tls_cert_dir: /etc/ssl
 tls_ca_key: ca.key
-tls_ca_cert: ca.cert
+tls_ca_cert: ca.crt
 
 tmp_dir: /tmp
 owner: ubuntu
@@ -14,11 +14,11 @@ group: ubuntu
 
 tls_server_subj: "/O=RedisLabs/CN=Production Server Certificate"
 tls_server_key: redis.key
-tls_server_cert: redis.cert
+tls_server_cert: redis.crt
 
 tls_client_subj: "/O=RedisLabs/CN=Redis Client Certificate"
 tls_client_key: client.key
-tls_client_cert: client.cert
+tls_client_cert: client.crt
 redis_conf_dir: /etc/redis
 
 redis_sys_user: "redisrunner"

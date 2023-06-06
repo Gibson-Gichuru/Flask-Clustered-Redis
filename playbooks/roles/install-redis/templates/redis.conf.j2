@@ -2,7 +2,7 @@
 
 daemonize no 
 
-supervised {{ init_sys }}
+supervised systemd
 
 pidfile /var/run/redis.pid
 
@@ -23,9 +23,10 @@ replica-read-only yes
 port {{ port_ }}
 tls-port {{ tls_port }}
 
-tls-cert-file {{ tls_cert_dir }}/{{ tls_server_cert }}
-tls-key-file {{ tls_key_dir }}/{{ tls_server_key }}
-tls-ca-cert-file {{ tls_ca_cert_dir }}/{{ tls_ca_cert }}
+tls-cert-file /etc/ssl/redis.crt
+tls-key-file /etc/ssl/private/redis.key
+
+tls-ca-cert-file /usr/local/share/ca-certificates/ca.crt
 
 tls-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
 tls-auth-clients yes
@@ -34,7 +35,7 @@ tls-replication yes
 
 tls-cluster yes
 
-tls-protocols {{ tls_protocols }}
+tls-protocols "TLSv1.3"
 
 tls-prefer-server-ciphers no
 
@@ -47,3 +48,12 @@ cluster-config-file {{ node_state_file }}
 cluster-node-timeout 15000
 
 cluster-migration-barrier 1
+
+cluster-announce-bus-port 5000
+
+# acl config
+
+
+# log
+
+logfile /var/log/redis/redis.log

@@ -5,7 +5,7 @@ port_: 0
 tls_port: 6379
 cluster_port: 5050
 rdb_file_name: data.rdb
-storage_dir: /data/redis
+storage_dir: /etc/redis
 tls_protocols: "TLSv1.3"
 init_sys: systemd
 cluster_enabled: "yes"

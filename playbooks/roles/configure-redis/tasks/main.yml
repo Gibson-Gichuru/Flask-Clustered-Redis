@@ -2,55 +2,59 @@
 - name: Generate Issuing Certificate and Key
   tags: ca, certgen
   shell: >
-    cd "{{ tmp_dir }}" && openssl genrsa -out "{{ tls_ca_key }}" 4096 && \
+    cd /tmp && openssl genrsa -out ca.key 4096 && \
     openssl req -x509 -new -nodes -sha256 \
-    -key "{{ tls_ca_key }}"
-    -days "{{ tls_ca_exp_days }}"
-    -subj "{{ tls_ca_subj }}"
-    -out "{{ tls_ca_cert }}" && \
-    mv "{{ tls_ca_key }}" "{{ tls_key_dir }}" && \
-    mv "{{ tls_ca_cert }}" "{{ tls_ca_cert_dir }}"
+    -key ca.key
+    -days 365
+    -subj "/O=RedisLabs/CN=Redis Production CA"
+    -out ca.crt && \
+    mv ca.key /etc/ssl/private && \
+    mv ca.crt /usr/local/share/ca-certificates
 
 - name: Generate Redis Server Certificate and Keys
   tags: server, certgen
   shell: >
-    cd "{{ tmp_dir }}" && openssl genrsa -out "{{ tls_server_key }}" 2048 && \
-    openssl req -new -sha256 -key "{{ tls_server_key }}" \
-    -subj "{{ tls_server_subj }}" | \
+    cd /tmp && openssl genrsa -out redis.key 2048 && \
+    openssl req -new -sha256 -key redis.key \
+    -subj "/O=RedisLabs/CN=Production Server Certificate" | \
     openssl x509 -req -sha256 \
-    -CA "{{ tls_ca_cert_dir }}/{{ tls_ca_cert }}" \
-    -CAkey "{{ tls_key_dir }}/{{ tls_ca_key }}" \
+    -CA /usr/local/share/ca-certificates/ca.crt \
+    -CAkey /etc/ssl/private/ca.key \
     -CAcreateserial \
-    -days "{{ tls_cert_exp_days }}" \
-    -out "{{ tls_server_cert }}" && \
-    mv "{{ tls_server_key }}" "{{ tls_key_dir }}" && \
-    mv "{{ tls_server_cert }}" "{{ tls_cert_dir }}"
+    -days 365 \
+    -out redis.crt && \
+    mv redis.key /etc/ssl/private/ && \
+    mv redis.crt /etc/ssl/
+
 
 - name: Generate Client Certificate and Key
-  tags: client, certgen
+  tags: client, certgen, permissions
   shell: >
-    cd "{{ tmp_dir }}" && openssl genrsa -out "{{ tls_client_key }}" 2048 && \
-    openssl req -new -sha256 -key "{{ tls_client_key }}" \
-    -subj "{{ tls_client_subj }}" | \
+    cd /tmp && openssl genrsa -out client.key 2048 && \
+    openssl req -new -sha256 -key client.key \
+    -subj "/O=RedisLabs/CN=Redis Client Certificate" | \
     openssl x509 -req -sha256 \
-    -CA "{{ tls_ca_cert_dir }}/{{ tls_ca_cert }}" \
-    -CAkey "{{ tls_key_dir }}/{{ tls_ca_key }}" \
+    -CA /usr/local/share/ca-certificates/ca.crt \
+    -CAkey /etc/ssl/private/ca.key \
     -CAcreateserial \
-    -days "{{ tls_cert_exp_days }}" \
-    -out "{{ tls_client_cert }}" && \
-    mv client.* "{{ tls_cert_dir }}" && \
-    chown "{{ owner }}":"{{ group }}" "{{tls_cert_dir}}" && \
-    chmod 640 "{{ tls_cert_dir }}"
+    -days 365 \
+    -out client.crt && \
+    mv client.* /etc/ssl/ && \
+    chown ubuntu:ubuntu /etc/ssl/* && \
+    chmod 640 /etc/ssl/*
 
 - name: Permissions Setup
+  tags: permissions
   shell: >
-    chown "{{ redis_sys_user }}":"{{ redis_sys_group }}" "{{ tls_cert_dir }}"/*.crt && \
-    chmod 640 "{{ tls_cert_dir }}"/*.crt
+    chown ubuntu:ubuntu /etc/ssl/*.crt && \
+    chmod 644 /etc/ssl/*.crt && \
+    chown ubuntu:ubuntu /etc/ssl/private/redis.key
 
 - name: CA Permissions Setup
+  tags: permissions ca
   shell: >
-    chown "{{ redis_sys_user }}":"{{ redis_sys_group }}" "{{ tls_ca_cert_dir}}/{{ tls_ca_cert }}"
-    chmod 644 "{{ tls_ca_cert_dir}}/{{ tls_ca_cert }}"
+    chown ubuntu:ubuntu /usr/local/share/ca-certificates/ca.crt && \
+    chmod 644 /usr/local/share/ca-certificates/ca.crt 
 
 - name: Update system certificates
   shell: update-ca-certificates

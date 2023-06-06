@@ -2,7 +2,8 @@ all:
   children:
     database:
       hosts:
-        18.233.224.7:
+        xx.xx.xx.xx:
+        xx.xx.xx.xx:
     webapp:
       hosts:
-        40.30.20.04:
+        xx.xx.xx.xx:
