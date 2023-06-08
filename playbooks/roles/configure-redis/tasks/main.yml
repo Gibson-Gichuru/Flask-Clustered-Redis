@@ -1,15 +1,15 @@
 ---
-- name: Generate Issuing Certificate and Key
-  tags: ca, certgen
-  shell: >
-    cd /tmp && openssl genrsa -out ca.key 4096 && \
-    openssl req -x509 -new -nodes -sha256 \
-    -key ca.key
-    -days 365
-    -subj "/O=RedisLabs/CN=Redis Production CA"
-    -out ca.crt && \
-    mv ca.key /etc/ssl/private && \
-    mv ca.crt /usr/local/share/ca-certificates
+
+- name: Copy Issuing Certificate to Server
+  copy:
+    src: ca.crt
+    dest: /usr/local/share/ca-certificates/ca.crt
+
+- name: Copy CA key to the Server
+  copy:
+    src: ca.key
+    dest: /etc/ssl/private/ca.key
+
 
 - name: Generate Redis Server Certificate and Keys
   tags: server, certgen

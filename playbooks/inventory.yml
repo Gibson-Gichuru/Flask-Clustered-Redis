@@ -3,7 +3,9 @@ all:
     database:
       hosts:
         xx.xx.xx.xx:
-        xx.xx.xx.xx:
     webapp:
       hosts:
         xx.xx.xx.xx:
+    clusternode:
+      hosts:
+        xx.xx.xx.xx
