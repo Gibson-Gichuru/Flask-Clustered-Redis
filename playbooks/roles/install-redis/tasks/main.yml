@@ -14,14 +14,14 @@
     state: present
     update_cache: yes
 
-
+# We want file ownership to be dynamic should be borrowed from the vars file
 - name: Logging DIR
   tags: setup
   file:
     path: "{{ redis_log_dir }}"
     state: directory
-    owner: "ubuntu"
-    group: "ubuntu"
+    owner: "{{ owner_and_group_name }}"
+    group: "{{ owner_and_group_name }}"
     mode: "0770"
     force: yes
 
@@ -30,8 +30,8 @@
   file:
     path: "{{ redis_log_dir }}/{{ redis_log_file }}"
     state: touch
-    owner: "ubuntu"
-    group: "ubuntu"
+    owner: "{{ owner_and_group_name }}"
+    group: "{{ owner_and_group_name }}"
     mode: "0640"
 
 - name: Download Redis
@@ -54,8 +54,8 @@
 - name: Change /etc/redis ownership
   file:
     path: /etc/redis
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{ owner_and_group_name }}"
+    group: "{{ owner_and_group_name }}"
     mode: "u+rwx,g+x"
     recurse: yes
 

@@ -10,3 +10,5 @@ tls_protocols: "TLSv1.3"
 init_sys: systemd
 cluster_enabled: "yes"
 node_state_file: 'node.conf'
+owner_and_group_name: "vagrant"
+
