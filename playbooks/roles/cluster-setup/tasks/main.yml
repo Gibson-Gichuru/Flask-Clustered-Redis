@@ -4,8 +4,8 @@
 - name: configure server keys
   file:
     path: /etc/ssl/private
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{ owner_and_group_name }}"
+    group: "{{ owner_and_group_name }}"
     mode: "u+rwx,g+x" 
 
 - name: install redis service

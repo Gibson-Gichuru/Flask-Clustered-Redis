@@ -2,13 +2,13 @@
 
 - name: Copy Issuing Certificate to Server
   copy:
-    src: ca.crt
-    dest: /usr/local/share/ca-certificates/ca.crt
+    src: "{{ ca_certificate }}"
+    dest: "{{ ca_certificate_destination }}"
 
 - name: Copy CA key to the Server
   copy:
-    src: ca.key
-    dest: /etc/ssl/private/ca.key
+    src: "{{ ca_key }}"
+    dest: "{{ ca_key_destination }}"
 
 
 - name: Generate Redis Server Certificate and Keys
@@ -18,8 +18,8 @@
     openssl req -new -sha256 -key redis.key \
     -subj "/O=RedisLabs/CN=Production Server Certificate" | \
     openssl x509 -req -sha256 \
-    -CA /usr/local/share/ca-certificates/ca.crt \
-    -CAkey /etc/ssl/private/ca.key \
+    -CA {{ ca_certificate_destination }} \
+    -CAkey {{ ca_key_destination }} -passin pass:{{ ca_certificate_passphrase }} \
     -CAcreateserial \
     -days 365 \
     -out redis.crt && \
@@ -34,27 +34,27 @@
     openssl req -new -sha256 -key client.key \
     -subj "/O=RedisLabs/CN=Redis Client Certificate" | \
     openssl x509 -req -sha256 \
-    -CA /usr/local/share/ca-certificates/ca.crt \
-    -CAkey /etc/ssl/private/ca.key \
+    -CA {{ ca_certificate_destination }} -passin pass:{{ ca_certificate_passphrase }} \
+    -CAkey {{ ca_key_destination }} \
     -CAcreateserial \
     -days 365 \
     -out client.crt && \
     mv client.* /etc/ssl/ && \
-    chown ubuntu:ubuntu /etc/ssl/* && \
+    chown {{ owner_and_group_name }}:{{ owner_and_group_name }} /etc/ssl/* && \
     chmod 640 /etc/ssl/*
 
 - name: Permissions Setup
   tags: permissions
   shell: >
-    chown ubuntu:ubuntu /etc/ssl/*.crt && \
+    chown {{ owner_and_group_name }}:{{ owner_and_group_name }} /etc/ssl/*.crt && \
     chmod 644 /etc/ssl/*.crt && \
-    chown ubuntu:ubuntu /etc/ssl/private/redis.key
+    chown {{ owner_and_group_name }}:{{ owner_and_group_name }} /etc/ssl/private/redis.key
 
 - name: CA Permissions Setup
   tags: permissions ca
   shell: >
-    chown ubuntu:ubuntu /usr/local/share/ca-certificates/ca.crt && \
-    chmod 644 /usr/local/share/ca-certificates/ca.crt 
+    chown {{ owner_and_group_name }}:{{ owner_and_group_name }} {{ ca_certificate_destination }} && \
+    chmod 644 {{ ca_certificate_destination }} 
 
 - name: Update system certificates
   shell: update-ca-certificates

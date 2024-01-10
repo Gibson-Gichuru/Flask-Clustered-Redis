@@ -3,6 +3,6 @@
   become: yes
 
   roles:
-    - install-redis
-    # - configure-redis
+    # - install-redis
+    - configure-redis
     # - cluster-setup
