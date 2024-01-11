@@ -5,7 +5,7 @@ After=network.target
 Type=notify
 ExecStart={{ redis_server }} {{ redis_conf }}
 TimeoutStopSec=0
-User=ubuntu
-Group=ubuntu
+User={{ owner_and_group_name }}
+Group={{ owner_and_group_name }}
 [Install]
 WantedBy=multi-user.target

@@ -1,12 +1,34 @@
 ---
 # tasks file for cluster-setup
-
 - name: configure server keys
   file:
     path: /etc/ssl/private
     owner: "{{ owner_and_group_name }}"
     group: "{{ owner_and_group_name }}"
     mode: "u+rwx,g+x" 
+
+
+- name: Opening required ports for input
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ item }}"
+    state: present
+
+  loop: "{{ required_ports }}"
+  loop_control:
+    label: "Port {{ item }}"
+
+- name: Opening required ports for output
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    source: "{{ item }}"
+    state: present
+
+  loop: "{{ required_ports }}"
+  loop_control:
+    label: "Port {{ item }}"
 
 - name: install redis service
   tags: service

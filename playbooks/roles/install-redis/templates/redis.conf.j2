@@ -4,7 +4,9 @@ daemonize no
 
 supervised systemd
 
-pidfile /var/run/redis.pid
+notify-keyspace-events Ex
+
+pidfile "{{ storage_dir }}/redis.pid"
 
 # persistence setuo
 
@@ -29,6 +31,7 @@ tls-key-file /etc/ssl/private/redis.key
 tls-ca-cert-file /usr/local/share/ca-certificates/ca.crt
 
 tls-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+
 tls-auth-clients yes
 
 tls-replication yes
@@ -50,10 +53,5 @@ cluster-node-timeout 15000
 cluster-migration-barrier 1
 
 cluster-announce-bus-port 5000
-
-# acl config
-
-
-# log
 
 logfile /var/log/redis/redis.log

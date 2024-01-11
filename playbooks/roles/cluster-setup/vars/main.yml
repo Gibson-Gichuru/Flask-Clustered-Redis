@@ -1,2 +1,7 @@
 ---
 # vars file for cluster-setup
+required_ports:
+  - 6379
+  - 5050
+  - 5000
+owner_and_group_name: "vagrant"

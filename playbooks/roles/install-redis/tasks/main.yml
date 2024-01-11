@@ -59,6 +59,13 @@
     mode: "u+rwx,g+x"
     recurse: yes
 
+- name: Change the /var/run ownership
+  file:
+    path: /var/run
+    owner: "{{ owner_and_group_name }}"
+    group: "{{ owner_and_group_name }}"
+    mode: "u+rwx,g+x"
+
 - name: Configure redis
   tags: configure, setup
   template:
