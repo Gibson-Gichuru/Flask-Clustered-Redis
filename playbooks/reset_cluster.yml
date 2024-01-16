@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Stop The server node
+      systemd:
+        name: redis
+        state: stopped
+
+    - name: Delete node config file
+      file:
+        path: "/etc/redis/node.conf"
+        state: absent
+
+    - name: Start the server 
+      systemd:
+        name: redis
+        state: started
+
