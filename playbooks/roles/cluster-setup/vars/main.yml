@@ -3,7 +3,7 @@
 required_ports:
   - 6379
   - 5050
-  - 5000
+  - 16379
 owner_and_group_name: "vagrant"
 
 redis_secure_admin_password: !vault |

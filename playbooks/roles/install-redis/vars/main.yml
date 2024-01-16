@@ -4,6 +4,7 @@
 port_: 0
 tls_port: 6379
 cluster_port: 5050
+cluster_announce_bus_port: 16379
 rdb_file_name: data.rdb
 storage_dir: /etc/redis
 tls_protocols: "TLSv1.3"
