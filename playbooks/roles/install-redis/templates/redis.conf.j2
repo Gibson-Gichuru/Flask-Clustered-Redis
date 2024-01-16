@@ -20,6 +20,15 @@ replica-serve-stale-data yes
 
 replica-read-only yes
 
+# enable password authentication
+
+requirepass {{ redis_secure_admin_password }}
+
+# this is a very bad idea. Redis have the protected mode to yes to prevent remote connection to the redis server.
+# In a real world case the nodes should be deployed in a private subnet. far away from internet access
+
+protected-mode no
+
 # tls enable 
 
 port {{ port_ }}
