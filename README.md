@@ -50,3 +50,25 @@ You should be able to connect to the Redis node and execute Redis commands.
     ansible-playbook -i clients playbooks/redis-client.yml
 ```
 This will install the flask application as a systemd service
+
+
+## Setting up the cluster
+
+Once all the nodes are running in cluster mode. now its just a matter of provisioning the cluster. 
+This can be done from any computer with access to the node's network having redis-cli client installed.
+
+By default redis prohibits remote access by running in protected-mode. thus this default behavior would prevent use from
+provisioning the cluster from a remote computer. thus we can disable this behavior by setting `protected-mode = no`.
+
+The above change makes any of our nodes vulnerable to attacks. to mitigate such we can set up ucl's that limit any user from 
+running dangerous commands i.e commands that can change the state of our server. 
+
+Also on top of requiring a signed client certificate and a key to connect to the node, we can request the client to provide some pre-registered password
+so as to authenticate. with that set. provisioning the cluster is just a matter of running the command below
+
+```bash
+redis-cli --tls --cert /path/to/client/certificate --key /path/to/client/private_key --cacert /path/to/the/ca/cert --cluster create [ipaddess/hostname_to_node:tls_port, ....] --cluster-replicas num_of_replica_per_master
+
+```
+
+with that redis will try to configure a suitable setup given the number of nodes available and the number of replicas required. just agree and the cluster will be provisioned
