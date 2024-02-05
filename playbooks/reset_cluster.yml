@@ -7,6 +7,12 @@
         name: redis
         state: stopped
 
+    - name: Delete Log files
+      file:
+        path: "/var/log/redis/redis.log"
+        state: absent
+
+
     - name: Delete node config file
       file:
         path: "/etc/redis/node.conf"
@@ -16,4 +22,5 @@
       systemd:
         name: redis
         state: started
+
 

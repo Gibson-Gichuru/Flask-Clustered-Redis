@@ -47,6 +47,8 @@ tls-replication yes
 
 tls-cluster yes
 
+tls-cluster yes
+
 tls-protocols "TLSv1.3"
 
 tls-prefer-server-ciphers no
@@ -54,6 +56,8 @@ tls-prefer-server-ciphers no
 # enable cluster mode
 
 cluster-enabled {{ cluster_enabled }}
+
+masterauth {{ redis_secure_admin_password }}
 
 cluster-config-file {{ node_state_file }}
 

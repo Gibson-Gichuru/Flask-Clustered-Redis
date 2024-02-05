@@ -1,4 +1,5 @@
 env/
+testCerts/
 .vscode/
 __pycache__/
 *.key

@@ -5,10 +5,17 @@
     src: "{{ ca_certificate }}"
     dest: "{{ ca_certificate_destination }}"
 
+  tags: "CA"
+
 - name: Copy CA key to the Server
   copy:
     src: "{{ ca_key }}"
     dest: "{{ ca_key_destination }}"
+    mode: "0644"
+    owner: "{{ owner_and_group_name }}"
+    group: "{{ owner_and_group_name }}"
+
+  tags: "CA"
 
 
 - name: Generate Redis Server Certificate and Keys
