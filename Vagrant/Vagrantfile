@@ -3,14 +3,16 @@ VAGRANTFILE_API_VERSION="2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do | config |
 
-    config.vm.box = "hashcorp/bionic64"
+    config.vm.box = "hashicorp/bionic64"
     config.ssh.insert_key = "false"
     config.ssh.password = "vagrant"
+
+    # we can sysnc any file from  the host machine and 
     config.vm.synced_folder "." "/vagrant", disabled: true
 
     # The default provider is virtualbox . this can be configured to meet the needs
     # allocate the machine memory and cpu based on the available resources available on your machine
-    config.vm.provider: vmware do | machine |
+    config.vm.provider "vmware" do | machine |
 
         machine.memory = 512
         machine.cpus = 1
@@ -25,87 +27,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do | config |
     # ansible
 
 
-    # master 0, am zero indexed LOL
+    # master 0, am zero indexed 
+    
+    (0..2).each do |i|
 
-    config.vm.define "master0" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.master0"
-        master.vm.network :private_network, ip "192.168.58.4"
-    end
+        config.vm.define "master#{i}" do | master |
+            master.vm.hostname = "redis-cluster-tutorial.master#{i}"
+            master.vm.network "private_network", ip: "192.168.58.#{i+2}"
+        end
+    end 
 
-    # master 1
 
-    config.vm.define "master1" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.master1"
-        master.vm.network :private_network, ip "192.168.58.5"
-    end
+    (0..7).each do |i|
 
-    # master 2
-
-    config.vm.define "master2" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.master2"
-        master.vm.network :private_network, ip "192.168.58.6"
-    end
-
-    # Replica 0
-
-    config.vm.define "replica0" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica0"
-        master.vm.network :private_network, ip "192.168.58.7"
-    end
-
-    # Replica 1
-
-    config.vm.define "replica1" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica1"
-        master.vm.network :private_network, ip "192.168.58.8"
-    end
-
-    # Replica 2
-
-    config.vm.define "replica2" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica2"
-        master.vm.network :private_network, ip "192.168.58.8"
-    end
-
-    # Replica 3
-
-    config.vm.define "replica3" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica3"
-        master.vm.network :private_network, ip "192.168.58.8"
-    end
-
-    # Replica 4
-
-    config.vm.define "replica4" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica4"
-        master.vm.network :private_network, ip "192.168.58.8"
-    end
-
-    # Replica 5
-
-    config.vm.define "replica5" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica5"
-        master.vm.network :private_network, ip "192.168.58.9"
-    end
-
-    # Replica 6
-
-    config.vm.define "replica6" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica6"
-        master.vm.network :private_network, ip "192.168.58.10"
-    end
-
-    # Replica 7
-
-    config.vm.define "replica7" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica7"
-        master.vm.network :private_network, ip "192.168.58.11"
-    end
-
-    # Replica 8
-
-    config.vm.define "replica8" do | master |
-        master.vm.hostname = "redis-cluster-tutorial.replica8"
-        master.vm.network :private_network, ip "192.168.58.12"
+        config.vm.define "replica#{i}" do | replica |
+            replica.vm.hostname = "redis-cluster-tutorial.replica#{i}"
+            replica.vm.network "private_network", ip: "192.168.58.#{i+5}"
+        end
     end
 end
